@@ -5,126 +5,85 @@ from sklearn.metrics import silhouette_score
 
 
 def classificar_dificuldade_kmeans(
-    caminho_csv_entrada: str,
-    caminho_csv_saida: str,
-    n_clusters: int = 4
+        caminho_csv_entrada: str,
+        caminho_csv_saida: str,
+        n_clusters: int = 5
 ) -> None:
-    """
-    Classificação da dificuldade de trilhas a partir de esforço diário
-    e carga acumulada (multi-day).
 
-    Escopo:
-    - dificuldade topográfica e cinemática
-    """
-
-    # ------------------------------------------------------------
-    # 1. Leitura
-    # ------------------------------------------------------------
     df = pd.read_csv(caminho_csv_entrada)
 
-    # ------------------------------------------------------------
-    # 2. Tempo estimado de referência
-    # ------------------------------------------------------------
-    df['tempo_estimado_min'] = df['tempo_tobler_min'].fillna(
-        df['tempo_naismith_min']
-    )
+    colunas = [
+        'intensidade_diaria',
+        'dias_trilha',
+        'indice_concentracao_esforco'
+    ]
 
-    # ------------------------------------------------------------
-    # 3. Engenharia de variáveis
-    # ------------------------------------------------------------
-    df['tempo_estimado_por_km_dia'] = (
-        df['tempo_estimado_min'] / df['distancia_por_dia_km']
-    )
+    dados_cluster = df[colunas].dropna()
 
-    df['ganho_por_km'] = df['ganho_elevacao_m'] / df['distancia_km']
-
-    # CARGA ACUMULADA
-    df['carga_multiday'] = (
-            df['dias_trilha'] * df['tempo_estimado_por_km_dia']
-    )
-
-    variaveis_cluster = df[
-        [
-            'tempo_estimado_por_km_dia',
-            'ganho_por_km',
-            'inclinacao_media_graus',
-            'carga_multiday'
-        ]
-    ].dropna()
-
-    # ------------------------------------------------------------
-    # 4. Normalização
-    # ------------------------------------------------------------
     scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(variaveis_cluster)
+    X_scaled = scaler.fit_transform(dados_cluster)
 
-    # ------------------------------------------------------------
-    # 5. K-Means
-    # ------------------------------------------------------------
     kmeans = KMeans(
         n_clusters=n_clusters,
         random_state=42,
         n_init=30
     )
 
-    df.loc[variaveis_cluster.index, 'cluster'] = (
-        kmeans.fit_predict(X_scaled)
-    )
+    clusters = kmeans.fit_predict(X_scaled)
 
-    # ------------------------------------------------------------
-    # 6. Avaliação
-    # ------------------------------------------------------------
+    df.loc[dados_cluster.index, 'cluster'] = clusters
+
     if n_clusters > 1:
-        silhouette = silhouette_score(
-            X_scaled,
-            df.loc[variaveis_cluster.index, 'cluster']
-        )
+        silhouette = silhouette_score(X_scaled, clusters)
         print(f"Silhouette Score (k={n_clusters}): {silhouette:.3f}")
 
     # ------------------------------------------------------------
-    # 7. Interpretação semântica
+    # ORDENAÇÃO CORRETA DOS CLUSTERS
+    # Usa centroide já na escala padronizada
     # ------------------------------------------------------------
-    resumo = (
-        df
-        .groupby('cluster')[
-            [
-                'tempo_estimado_por_km_dia',
-                'ganho_por_km',
-                'inclinacao_media_graus',
-                'carga_multiday'
-            ]
+
+    centroides = kmeans.cluster_centers_
+
+    scores = centroides.sum(axis=1)
+
+    ordem = scores.argsort()
+
+    if n_clusters == 5:
+        rotulos = [
+            'Leve',
+            'Moderada',
+            'Pesada',
+            'Muito Pesada',
+            'Extrema'
         ]
-        .mean()
-        .reset_index()
-    )
-
-    resumo['indice_esforco'] = (
-        resumo['tempo_estimado_por_km_dia']
-        + resumo['ganho_por_km'] / 100
-        + resumo['inclinacao_media_graus']
-        + resumo['carga_multiday'] / 10
-    )
-
-    resumo = resumo.sort_values('indice_esforco')
-
-    if n_clusters == 4:
-        rotulos = ['Leve', 'Moderada', 'Pesada', 'Extrema']
+    elif n_clusters == 4:
+        rotulos = [
+            'Leve',
+            'Moderada',
+            'Pesada',
+            'Extrema'
+        ]
     elif n_clusters == 3:
-        rotulos = ['Leve', 'Moderada', 'Pesada']
+        rotulos = [
+            'Leve',
+            'Moderada',
+            'Pesada'
+        ]
     else:
-        rotulos = ['Leve', 'Pesada']
+        raise ValueError("Número de clusters não suportado.")
 
-    mapa_dificuldade = {
-        cluster: rotulos[i]
-        for i, cluster in enumerate(resumo['cluster'])
+    mapa = {
+        ordem[i]: rotulos[i]
+        for i in range(n_clusters)
     }
 
-    df['dificuldade'] = df['cluster'].map(mapa_dificuldade)
+    df['dificuldade'] = df['cluster'].map(mapa)
 
-    # ------------------------------------------------------------
-    # 8. Persistência
-    # ------------------------------------------------------------
-    df.to_csv(caminho_csv_saida, index=False, encoding='utf-8')
+    df.to_csv(
+        caminho_csv_saida,
+        index=False,
+        encoding='utf-8'
+    )
 
-    print("\nClassificação de dificuldade concluída.")
+    print("\nClassificação concluída.")
     print(df['dificuldade'].value_counts())
