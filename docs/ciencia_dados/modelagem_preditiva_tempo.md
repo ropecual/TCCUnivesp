@@ -31,15 +31,6 @@ Parâmetros escalares (`float`).
 - Velocidade Teórica ($v$) em km/h.
 - Delta de Elevação ($h$) em metros.
 
-## Endpoints ou CLI
-N/A.
-
-## Templates envolvidos
-N/A.
-
-## Scripts JS envolvidos
-N/A.
-
 ## Modelos de Machine Learning envolvidos
 N/A (Modelos matemáticos determinísticos).
 

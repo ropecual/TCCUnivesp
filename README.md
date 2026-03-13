@@ -1,7 +1,7 @@
 # Classificação da Dificuldade de Trilhas de Trekking via Ciência de Dados
 
 ## 🎓 Contexto Acadêmico
-Este repositório é parte integrante doprojeto de Trabalho de Conclusão de Curso (TCC) da **Universidade Virtual do Estado de São Paulo (UNIVESP)**. O sistema visa aplicar técnicas avançadas de Ciência de Dados e Machine Learning para resolver o desafio de padronização na classificação de dificuldade de trilhas de trekking, baseando-se em variáveis objetivas e modelos fisiológicos de esforço.
+Este repositório é parte integrante doprojeto de Trabalho de Conclusão de Curso (TCC) da **Universidade Virtual do Estado de São Paulo (UNIVESP)**. O sistema visa aplicar técnicas avançadas de Ciência de Dados para resolver o desafio de padronização na classificação de dificuldade de trilhas de trekking, baseando-se em variáveis objetivas e modelos fisiológicos de esforço.
 
 ---
 
