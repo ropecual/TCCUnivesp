@@ -36,7 +36,7 @@ O projeto é estruturado como um pipeline modular em Python puro, garantindo esc
 ## 📚 Documentação Técnica
 Para detalhes aprofundados sobre a fundamentação teórica e o funcionamento interno de cada módulo, consulte a pasta `docs/`:
 - [Visão Geral da Arquitetura](docs/arquitetura/visao_geral.md)
-- [Modelagem de Tempo](docs/ciencia_dados/modelagem_preditiva_tempo.py.md)
+- [Modelagem de Tempo](docs/ciencia_dados/modelagem_preditiva_tempo.md)
 - [Clustering de Dificuldade](docs/ciencia_dados/clustering_dificuldade.md)
 
 ---
