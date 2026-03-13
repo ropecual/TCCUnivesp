@@ -1,55 +1,52 @@
 # Classificação de Dificuldade via Clustering
 
 ## Objetivo
-Descrever o processo de aprendizado de máquina utilizado para agrupar trilhas em níveis de dificuldade utilizando o algoritmo K-Means.
+Descrever o processo de aprendizado de máquina utilizado para agrupar trilhas em níveis de dificuldade utilizando uma abordagem comparativa entre **K-Means**, **Clustering Hierárquico** e **DBSCAN**.
 
 ## Contexto no projeto
-É o estágio final de inteligência do sistema, onde as métricas calculadas anteriormente são consolidadas para rotular as trilhas (Leve, Moderada, Pesada, Muito Pesada, Extrema).
+É o estágio final de inteligência do sistema, onde as métricas calculadas anteriormente são consolidadas para rotular as trilhas (Leve, Moderada, Pesada, Muito Pesada, Extrema). A comparação entre algoritmos garante que a classificação seja robusta e validada por diferentes técnicas de agrupamento.
 
 ## Fundamentação teórica
-O agrupamento utiliza **K-Means Clustering**, um algoritmo de partição que minimiza a variância dentro dos clusters. Como as features possuem escalas diferentes (km, metros, minutos), a padronização (`StandardScaler`) é essencial para garantir pesos iguais na distância euclidiana.
+O agrupamento utiliza três abordagens distintas de aprendizado não supervisionado:
+1. **K-Means Clustering**: Algoritmo de partição que minimiza a variância dentro dos clusters. É o modelo principal para a rotulação em 5 níveis.
+2. **Clustering Hierárquico (Agglomerative)**: Utiliza a métrica de Ward para construir uma hierarquia de clusters, validando a estrutura natural dos dados.
+3. **DBSCAN**: Baseado em densidade, utilizado primariamente para identificar ruídos (outliers) e validar agrupamentos densos.
+
+Como as features possuem escalas diferentes, a padronização (`StandardScaler`) é aplicada em todos os modelos.
 
 ## Requisitos
 - Biblioteca `scikit-learn` para modelagem e pré-processamento.
-- Dataset consolidade gerado pelas etapas anteriores.
+- Dataset consolidado gerado pelas etapas anteriores.
 
 ## Estrutura técnica
 Localizado em `src/clustering_dificuldade.py`.
-- `classificar_dificuldade_kmeans`: Função principal que executa o pipeline de ML.
+- `classificar_dificuldade_kmeans`: Modelo principal de produção.
+- `classificar_dificuldade_hierarquico`: Validação estrutural.
+- `classificar_dificuldade_dbscan`: Detecção de anomalias e densidade.
 
 ## Fluxo de funcionamento
-1. Seleção de features: `intensidade_diaria`, `dias_trilha`, `indice_concentracao_esforco`.
-2. Padronização dos dados (Z-score).
-3. Execução do K-Means com centróides iniciais aleatórios (n=30).
-4. Ordenação dos clusters baseada na soma dos centroides (para mapear 0 -> Leve, etc.).
-5. Mapeamento de rótulos humanos aos IDs de cluster.
-
-## Modelos de dados envolvidos
-- **DataFrame Classificado**: Dataset original com colunas adicionais `cluster` e `dificuldade`.
-
-## Variáveis científicas utilizadas
-- **Intensidade Diária**: Métrica composta de tempo por km + ganho relativo.
-- **Índice de Concentração de Esforço**: Desvio padrão dos ganhos diários / média.
-
-## Endpoints ou CLI
-N/A.
-
-## Templates envolvidos
-N/A.
-
-## Scripts JS envolvidos
-N/A.
+1. **Seleção de features**: `intensidade_diaria` (ID), `dias_trilha` e `indice_concentracao_esforco` (IC).
+2. **Padronização**: Z-score para média zero e variância unitária.
+3. **Execução Comparativa**:
+   - K-Means com k=5.
+   - Hierárquico com k=5 e ligação Ward.
+   - DBSCAN para análise de densidade e ruído.
+4. **Ordenação e Rotulação**: Clusters são ordenados pela soma dos IDs e ICs de seus centroides (ou pseudo-centroides) para garantir que 0 seja "Leve" e 4 seja "Extrema".
 
 ## Modelos de Machine Learning envolvidos
-- **K-Means (Unsupervised)**: k=3, 4 ou 5 (conforme configuração).
+- **K-Means (Unsupervised)**: k=5 (Silhouette Score: ~0.442).
+- **Agglomerative Clustering**: k=5.
+- **DBSCAN**: eps=0.5, min_samples=3.
+
+## Variáveis científicas utilizadas
+- **Intensidade Diária (ID)**: Integra tempo estimado por km e métricas topográficas.
+- **Índice de Concentração de Esforço (IC)**: IC = ID * (1 + ln(D)), onde D é a duração.
 
 ## Métricas de avaliação
-- **Silhouette Coefficient**: Mede quão próximo um ponto está dos pontos de seu próprio cluster em relação aos pontos de outros clusters.
-
-## Testes previstos
-- Estabilidade dos clusters em diferentes execuções (Random State fixo).
-- Sensibilidade à remoção de outliers de quilometragem.
+- **Silhouette Coefficient**: Utilizado para medir a coesão e separação. O K-Means obteve 0.442, indicando uma estrutura sólida.
+- **Análise de Ruído (DBSCAN)**: Identificação de trilhas atípicas que não se encaixam nos clusters padrão.
 
 ## Referências acadêmicas
 - PEDREGOSA, F. et al. Scikit-learn: Machine Learning in Python. **JMLR**, 2011.
 - JAIN, A. K. Data clustering: 50 years beyond K-means. **Pattern Recognition Letters**, 2010.
+- MANTUANO, A.; BRUNO, F. Classification of hiking difficulty levels of accessible natural trails. **Sustainability**, 2025.

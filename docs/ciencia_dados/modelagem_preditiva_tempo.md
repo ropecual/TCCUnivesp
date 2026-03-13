@@ -4,7 +4,7 @@
 Documentar a implementação das funções clássicas de estimativa de tempo de caminhada (Tobler e Naismith) aplicadas à Ciência de Dados do projeto.
 
 ## Contexto no projeto
-Essas métricas são utilizadas para normalizar o esforço físico necessário para completar uma trilha, independentemente da distância absoluta, servindo como features para o clustering de dificuldade.
+Essas métricas são utilizadas para normalizar o esforço físico necessário para completar uma trilha, independentemente da distância absoluta, servindo como features essenciais para os algoritmos de clustering (K-Means, Hierárquico e DBSCAN) que classificam a dificuldade.
 
 ## Fundamentação teórica
 - **Função de Caminhada de Tobler**: Relação exponencial entre a inclinação do terreno e a velocidade de caminhada ($v = 6 \cdot e^{-3.5 \cdot |\tan(\theta) + 0.05|}$).

@@ -1,6 +1,6 @@
 from src.processamento_lote import processar_pasta_gpx
 from src.enriquecimento_geografico import enriquecer_localizacao
-from src.clustering_dificuldade import classificar_dificuldade_kmeans
+from src.clustering_dificuldade import classificar_dificuldade_kmeans, classificar_dificuldade_dbscan, classificar_dificuldade_hierarquico
 
 
 def main():
@@ -64,13 +64,35 @@ def main():
 
     print("\n[3/3] Classificando dificuldade das trilhas...")
 
+    # 3) Classificação Comparativa
+    print("\n[3/3] Iniciando Comparação de Algoritmos de Clustering...")
+
+    # K-Means (Base)
+    print("\nExecutando K-Means...")
     classificar_dificuldade_kmeans(
         caminho_csv_entrada=caminho_para_classificacao,
-        caminho_csv_saida=caminho_classificado,
+        caminho_csv_saida='dados/resultados/trilhas_kmeans.csv',
         n_clusters=5
     )
 
-    print("\nPipeline completo executado com sucesso.")
+    # Hierárquico
+    print("\nExecutando Clustering Hierárquico...")
+    classificar_dificuldade_hierarquico(
+        caminho_csv_entrada=caminho_para_classificacao,
+        caminho_csv_saida='dados/resultados/trilhas_hierarquico.csv',
+        n_clusters=5
+    )
+
+    # DBSCAN
+    print("\nExecutando DBSCAN...")
+    classificar_dificuldade_dbscan(
+        caminho_csv_entrada=caminho_para_classificacao,
+        caminho_csv_saida='dados/resultados/trilhas_dbscan.csv',
+        eps=0.5, 
+        min_samples=3
+    )
+
+    print("\nAnálise comparativa completa. Verifique a pasta 'dados/resultados/'.")
 
 
 if __name__ == "__main__":
