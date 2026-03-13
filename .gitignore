@@ -6,6 +6,7 @@ dados/gpx/*
 dados/resultados/*
 .idea/*
 .idea
+docs/
 .ipynb_checkpoints
 */.ipynb_checkpoints/*
 

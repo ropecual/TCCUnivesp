@@ -4,14 +4,15 @@ import pandas as pd
 
 def ler_gpx(caminho_gpx: str) -> pd.DataFrame:
     """
-    Lê um arquivo GPX (bruto ou simplificado) e retorna um DataFrame
-    contendo latitude, longitude, altitude (m) e timestamp.
-
-    O método:
-    - lê todos os pontos disponíveis (todos os tracks e segmentos)
-    - remove pontos inválidos ou incompletos
-    - normaliza timestamps para UTC
-    - ordena cronologicamente
+    Objetivo: Extrair e normalizar dados brutos de arquivos GPX.
+    Entrada: String com o caminho do arquivo .gpx.
+    Processamento: 
+        1. Parseia o XML usando gpxpy.
+        2. Navega pela hierarquia Tracks -> Segments -> Points.
+        3. Filtra apenas pontos com Latitude, Longitude e Elevação válidas.
+        4. Cria um DataFrame Pandas e converte timestamps para UTC.
+        5. Ordena os pontos cronologicamente para garantir integridade física da trilha.
+    Saída: pd.DataFrame com colunas ['latitude', 'longitude', 'altitude_m', 'time'].
     """
     with open(caminho_gpx, 'r', encoding='utf-8') as arquivo:
         gpx = gpxpy.parse(arquivo)
@@ -51,10 +52,13 @@ def ler_gpx(caminho_gpx: str) -> pd.DataFrame:
 
 def calcular_tempo_total_minutos(dados: pd.DataFrame) -> float:
     """
-    Calcula o tempo total da trilha em minutos com base
-    no primeiro e último timestamp válido.
-
-    Retorna None se o GPX não possuir timestamps suficientes.
+    Objetivo: Calcular a duração total da atividade (tempo de relógio).
+    Entrada: pd.DataFrame contendo a coluna 'time' com objetos datetime.
+    Processamento: 
+        1. Verifica a existência da coluna 'time'.
+        2. Extrai o timestamp inicial (primeiro ponto) e o final (último ponto).
+        3. Calcula a diferença temporal absoluta.
+    Saída: Float representando o tempo total em minutos. Retorna None se não houver dados temporais suficientes.
     """
     if 'time' not in dados.columns:
         return None

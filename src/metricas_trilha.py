@@ -10,14 +10,16 @@ def calcular_tempo_ativo_min(
     vmax_kmh: float = 7.0
 ) -> float:
     """
-    Calcula o tempo ativo de deslocamento (em minutos),
-    somando apenas os intervalos em que a velocidade instantânea
-    é fisiologicamente plausível para caminhada.
-
-    Esse método:
-    - ignora paradas longas (acampamento, descanso, espera)
-    - funciona para trilhas single-day e multi-day
-    - funciona com GPX bruto ou simplificado
+    Objetivo: Calcular o tempo de movimento efetivo dentro de padrões biomecânicos.
+    Entrada: 
+        - dados: pd.DataFrame com colunas ['latitude', 'longitude', 'time'].
+        - vmin_kmh: Velocidade mínima (humanamente plausível para trilha).
+        - vmax_kmh: Velocidade máxima (limite de corrida/movimento rápido).
+    Processamento: 
+        1. Itera entre pontos consecutivos calculando a distância geodésica.
+        2. Calcula a velocidade instantânea entre os pontos.
+        3. Acumula o delta temporal apenas se a velocidade estiver no intervalo [vmin, vmax].
+    Saída: Float representando o tempo ativo acumulado em minutos.
     """
     if 'time' not in dados.columns:
         return None
@@ -52,10 +54,14 @@ def calcular_distancia_total_km(
     distancia_min_m: float = 1.0
 ) -> float:
     """
-    Calcula a distância total da trilha em quilômetros,
-    somando as distâncias geodésicas entre pontos consecutivos.
-
-    distancia_min_m: ignora deslocamentos muito pequenos (ruído GPS)
+    Objetivo: Determinar a quilometragem total percorrida no plano horizontal.
+    Entrada: 
+        - dados: pd.DataFrame com ['latitude', 'longitude'].
+        - distancia_min_m: Filtro de ruído (ignora micro-movimentos do sinal GPS).
+    Processamento: 
+        1. Utiliza a biblioteca geopy para calcular a distância geodésica entre pontos 'i' e 'i-1'.
+        2. Soma as distâncias que superam o limiar de ruído configurado.
+    Saída: Float representando a distância total em quilômetros.
     """
     distancia_total_m = 0.0
 
@@ -82,10 +88,14 @@ def calcular_ganho_elevacao_m(
     delta_min_m: float = 3.0
 ) -> float:
     """
-    Calcula o ganho de elevação positivo (em metros),
-    ignorando pequenas oscilações verticais (ruído de sensor).
-
-    delta_min_m: variação mínima de altitude para ser considerada subida real
+    Objetivo: Calcular o ganho acumulado de elevação positiva (desnível positivo).
+    Entrada: 
+        - dados: pd.DataFrame com a coluna 'altitude_m'.
+        - delta_min_m: Limiar de variação para filtrar ruídos de sensores barométricos.
+    Processamento: 
+        1. Analisa a série temporal de altitudes.
+        2. Soma apenas as variações positivas (subidas) que excedem o limiar de 3m.
+    Saída: Float representando o ganho total em metros.
     """
     ganho = 0.0
     altitudes = dados['altitude_m'].values

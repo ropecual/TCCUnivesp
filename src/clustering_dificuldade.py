@@ -4,11 +4,18 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
 
 
-def classificar_dificuldade_kmeans(
-        caminho_csv_entrada: str,
-        caminho_csv_saida: str,
-        n_clusters: int = 5
-) -> None:
+def classificar_dificuldade_kmeans(caminho_csv_entrada: str, caminho_csv_saida: str, n_clusters: int = 5) -> None:
+    """
+    Objetivo: Clusterizar e rotular as trilhas por nível de dificuldade percebida.
+    Entrada: Caminho do CSV consolidado com as features científicas.
+    Processamento: 
+        1. Seleciona features-chave: Intensidade, Duração (Dias) e Concentração de Esforço.
+        2. Normaliza os dados (StandardScaler) para que quilometragens e scores tenham o mesmo peso.
+        3. Treina o K-Means para encontrar padrões naturais de agrupamento.
+        4. Calcula o Silhouette Score para validar a qualidade da segmentação.
+        5. Lógica de Negócio: Ordena os clusters pela "severidade" do centroide e mapeia nomes (Leve -> Extrema).
+    Saída: Salva um novo CSV com as colunas 'cluster' e 'dificuldade'.
+    """
 
     df = pd.read_csv(caminho_csv_entrada)
 

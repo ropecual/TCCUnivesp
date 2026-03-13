@@ -5,12 +5,11 @@ from src.clustering_dificuldade import classificar_dificuldade_kmeans
 
 def main():
     """
-    Pipeline principal do projeto de classificação de dificuldade de trilhas.
-
-    Etapas:
-    1) Processamento dos arquivos GPX
-    2) (Opcional) Enriquecimento geográfico
-    3) Classificação da dificuldade via K-Means
+    Objetivo: Pipeline mestre do TCC Univesp.
+    Fluxo:
+    1. Ingestão e Processamento Lote: Transforma GPX em métricas tabulares iniciais.
+    2. Enriquecimento (Opcional): Adiciona dados geocodificados através da API Nominatim.
+    3. Modelagem e Classificação: Aplica Machine Learning para rotular as trilhas.
     """
 
     # ------------------------------------------------------------

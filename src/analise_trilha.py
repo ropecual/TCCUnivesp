@@ -14,8 +14,16 @@ from src.modelos_tempo import estimar_tempo_tobler_min
 # FUNÇÕES AUXILIARES
 # ------------------------------------------------------------
 
-def calcular_inclinacao_media_graus(distancia_km: float,
-                                    ganho_elevacao_m: float) -> float:
+def calcular_inclinacao_media_graus(distancia_km: float, ganho_elevacao_m: float) -> float:
+    """
+    Objetivo: Calcular a inclinação média da trilha em termos angulares.
+    Entrada: Distância horizontal (km) e Ganho de elevação (m).
+    Processamento: 
+        1. Converte distância para metros.
+        2. Calcula a arco-tangente do gradiente (subida / vã).
+        3. Converte o resultado de radianos para graus.
+    Saída: Float representando a inclinação média em graus.
+    """
     if distancia_km <= 0:
         return 0.0
 
@@ -26,6 +34,12 @@ def calcular_inclinacao_media_graus(distancia_km: float,
 
 
 def calcular_dias_trilha(dados: pd.DataFrame) -> int:
+    """
+    Objetivo: Diferenciar trilhas de um dia (leisure) de expedições multi-day.
+    Entrada: pd.DataFrame com a coluna 'time'.
+    Processamento: Extrai a parte da 'data' do timestamp e conta ocorrências únicas.
+    Saída: Inteiro representando o número de dias de duração.
+    """
     if 'time' not in dados.columns:
         return 1
 
@@ -38,6 +52,15 @@ def calcular_dias_trilha(dados: pd.DataFrame) -> int:
 
 
 def calcular_indice_concentracao(dados: pd.DataFrame) -> float:
+    """
+    Objetivo: Medir a heterogeneidade do esforço vertical ao longo dos dias.
+    Entrada: pd.DataFrame com colunas 'time' e 'altitude_m'.
+    Processamento: 
+        1. Agrupa os pontos por data.
+        2. Calcula o ganho de elevação de cada dia individualmente.
+        3. Computa o Coeficiente de Variação (Desvio Padrão / Média) dos ganhos diários.
+    Saída: Float representando a regularidade do esforço (0 = esforço constante).
+    """
     if 'time' not in dados.columns:
         return 0.0
 
@@ -58,6 +81,7 @@ def calcular_indice_concentracao(dados: pd.DataFrame) -> float:
         return 0.0
 
     return float(np.std(ganhos) / media)
+    return float(np.std(ganhos) / media)
 
 
 # ------------------------------------------------------------
@@ -65,6 +89,16 @@ def calcular_indice_concentracao(dados: pd.DataFrame) -> float:
 # ------------------------------------------------------------
 
 def analisar_trilha(caminho_gpx: str) -> dict:
+    """
+    Objetivo: Orquestrar a extração completa de metadados científicos de uma trilha.
+    Entrada: String com o caminho do arquivo GPX.
+    Processamento: 
+        1. Executa 'ler_gpx' para obter o DataFrame.
+        2. Aciona o motor de métricas (distância, ganho, inclinação).
+        3. Aplica o modelo de Tobler para estimativa de intensidade temporal.
+        4. Calcula o score de Intensidade Diária (combinação de tempo e declividade).
+    Saída: Dicionário contendo todos os indicadores calculados prontos para o dataset.
+    """
 
     nome_trilha = os.path.splitext(
         os.path.basename(caminho_gpx)

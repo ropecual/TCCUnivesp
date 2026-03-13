@@ -5,17 +5,19 @@ from geopy.geocoders import Nominatim
 from geopy.extra.rate_limiter import RateLimiter
 
 
-def enriquecer_localizacao(
-    caminho_csv_entrada: str,
-    caminho_csv_saida: str,
-    atraso_minimo_segundos: int = 5
-) -> None:
+def enriquecer_localizacao(caminho_csv_entrada: str, caminho_csv_saida: str, atraso_minimo_segundos: int = 5) -> None:
     """
-    Realiza enriquecimento geográfico (cidade, estado, país)
-    a partir das coordenadas iniciais das trilhas.
-
-    Implementação conservadora, tolerante a falhas e adequada
-    para uso acadêmico com o serviço Nominatim.
+    Objetivo: Traduzir coordenadas GPS em endereços legíveis (Geocoding Reversa).
+    Entrada: 
+        - caminho_csv_entrada: CSV gerado pela análise técnica inicial.
+        - caminho_csv_saida: Destino do novo CSV enriquecido.
+    Processamento: 
+        1. Carrega o dataset original.
+        2. Para cada linha, extrai a Latitude e Longitude de início.
+        3. Consulta o serviço Nominatim (OSM) via RateLimiter.
+        4. Realiza o parser dos campos 'city', 'town', 'village', 'state' e 'country'.
+        5. Salva os novos campos no DataFrame.
+    Saída: Arquivo CSV físico com as colunas de localização adicionadas.
     """
 
     df = pd.read_csv(caminho_csv_entrada)
