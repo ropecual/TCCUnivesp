@@ -6,7 +6,11 @@ dados/gpx/*
 dados/resultados/*
 .idea/*
 .idea
-docs/
+
+docs/pesquisa/
+docs/pesquisa/*
+docs/01_AI_GUIDELINES.md
+
 .ipynb_checkpoints
 */.ipynb_checkpoints/*
 
