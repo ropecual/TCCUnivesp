@@ -265,12 +265,12 @@ def gerar_graficos_discussao_avancados(caminho_csv='dados/resultados/trilhas_kme
 def gerar_grafico_3d_kmeans(caminho_csv='dados/resultados/trilhas_kmeans.csv'):
     df = pd.read_csv(caminho_csv)
     
-    # Organiza as categorias
+
     cat_order = ['Leve', 'Moderada', 'Pesada', 'Muito Pesada', 'Extrema']
     if 'dificuldade' in df.columns:
         df['dificuldade'] = pd.Categorical(df['dificuldade'], categories=cat_order, ordered=True)
         
-    # Cores Categóricas e Distintas (Semântica de Alerta)
+
     color_map = {
         'Leve': '#2ca02c',        # Verde
         'Moderada': '#1f77b4',    # Azul
@@ -279,38 +279,37 @@ def gerar_grafico_3d_kmeans(caminho_csv='dados/resultados/trilhas_kmeans.csv'):
         'Extrema': '#9467bd'      # Roxo
     }
 
-    # Configura a figura 3D
     fig = plt.figure(figsize=(12, 9))
     ax = fig.add_subplot(111, projection='3d')
     
-    # Piso do eixo Z (Dias de trilha)
+
     min_z = 0 
     
     for cat in cat_order:
         subset = df[df['dificuldade'] == cat]
         color = color_map[cat]
         
-        # 1. HASTES (Linhas caindo até o chão)
+  
         for _, row in subset.iterrows():
             ax.plot([row['intensidade_diaria'], row['intensidade_diaria']], 
                     [row['indice_concentracao_esforco'], row['indice_concentracao_esforco']], 
                     [min_z, row['dias_trilha']], 
                     color=color, alpha=0.5, linewidth=1.5, linestyle='--')
             
-        # 2. PONTOS REAIS
+
         ax.scatter(subset['intensidade_diaria'], 
                    subset['indice_concentracao_esforco'], 
                    subset['dias_trilha'], 
                    s=100, label=cat, alpha=0.95, edgecolors='black', linewidths=1, color=color)
                    
-        # 3. SOMBRAS
+
         ax.scatter(subset['intensidade_diaria'], 
                    subset['indice_concentracao_esforco'], 
                    [min_z] * len(subset), 
                    s=40, alpha=0.35, color=color, edgecolors='none')
 
-    # Títulos e Eixos
-    ax.set_title('Espaço 3D do K-Means: ID x IC x Dias\n(Com Projeção de Profundidade)', fontweight='bold', fontsize=14)
+
+    ax.set_title('Espaço 3D do K-Means: ID x IC x Dias)', fontweight='bold', fontsize=14)
     ax.set_xlabel('Intensidade Diária (ID)')
     ax.set_ylabel('Índice de Conc. de Esforço (IC)')
     ax.set_zlabel('Dias de Trilha')
