@@ -1,11 +1,11 @@
 # Classificação da Dificuldade de Trilhas de Trekking via Ciência de Dados
 
-## 🎓 Contexto Acadêmico
+## Contexto Acadêmico
 Este repositório é parte integrante doprojeto de Trabalho de Conclusão de Curso (TCC) da **Universidade Virtual do Estado de São Paulo (UNIVESP)**. O sistema visa aplicar técnicas avançadas de Ciência de Dados para resolver o desafio de padronização na classificação de dificuldade de trilhas de trekking, baseando-se em variáveis objetivas e modelos fisiológicos de esforço.
 
 ---
 
-## 🔬 O Problema e Objetivos
+## O Problema e Objetivos
 A classificação de dificuldade de trilhas costuma ser subjetiva e variar drasticamente entre plataformas. Este projeto busca atender:
 1. **Predição do Tempo de Execução**: Utilização de modelos matemáticos como a **Função de Caminhada de Tobler** e a **Regra de Naismith** para estimar o esforço temporal necessário.
 2. **Análise Topográfica**: Processamento de dados GPX para extrair métricas de distância geodésica, ganho de elevação acumulado e inclinação média.
@@ -13,7 +13,7 @@ A classificação de dificuldade de trilhas costuma ser subjetiva e variar drast
 
 ---
 
-## 🛠️ Arquitetura do Sistema
+## Arquitetura do Sistema
 O projeto é estruturado como um pipeline modular em Python, integrando geoprocessamento e machine learning:
 
 - **Processamento em Lote (`src/processamento_lote.py`)**: Coordena a leitura massiva de arquivos GPX.
@@ -27,7 +27,7 @@ O projeto é estruturado como um pipeline modular em Python, integrando geoproce
 
 ---
 
-## 🚦 Como Executar
+## Como Executar
 1. Instale as dependências: `pip install -r requirements.txt`
 2. Posicione seus arquivos GPX em `dados/gpx/`.
 3. Execute o script principal: `python main.py`
@@ -35,16 +35,10 @@ O projeto é estruturado como um pipeline modular em Python, integrando geoproce
 
 ---
 
-## 📚 Documentação Técnica
+## Documentação Técnica
 Para detalhes aprofundados sobre a fundamentação teórica e o funcionamento interno de cada módulo, consulte a pasta `docs/`:
 - [Visão Geral da Arquitetura](docs/arquitetura/visao_geral.md)
 - [Modelagem de Tempo](docs/ciencia_dados/modelagem_preditiva_tempo.md)
 - [Clustering de Dificuldade](docs/ciencia_dados/clustering_dificuldade.md)
 
 ---
-
-## ⚖️ Licença e Referências
-*Projeto acadêmico desenvolvido sob os preceitos de Ciência Aberta.*
-Principais referências:
-- TOBLER, Waldo. *Three mountains algorithms*. (1993).
-- NAISMITH, William. *Naismith's Rule*. (1892).
