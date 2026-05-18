@@ -7,7 +7,7 @@ Este repositório é parte integrante doprojeto de Trabalho de Conclusão de Cur
 
 ## O Problema e Objetivos
 A classificação de dificuldade de trilhas costuma ser subjetiva e variar drasticamente entre plataformas. Este projeto busca atender:
-1. **Predição do Tempo de Execução**: Utilização de modelos matemáticos como a **Função de Caminhada de Tobler** e a **Regra de Naismith** para estimar o esforço temporal necessário.
+1. **Predição do Tempo de Execução**: Utilização o modelo matemático **Função de Caminhada de Tobler**  para estimar o esforço temporal necessário.
 2. **Análise Topográfica**: Processamento de dados GPX para extrair métricas de distância geodésica, ganho de elevação acumulado e inclinação média.
 3. **Classificação Inteligente**: Abordagem comparativa de aprendizado não supervisionado utilizando **K-Means**, **Clustering Hierárquico** e **DBSCAN** para agrupar trilhas em níveis de dificuldade (Leve a Extrema) e detectar anomalias, com validação via Silhouette Score.
 
@@ -35,10 +35,5 @@ O projeto é estruturado como um pipeline modular em Python, integrando geoproce
 
 ---
 
-## Documentação Técnica
-Para detalhes aprofundados sobre a fundamentação teórica e o funcionamento interno de cada módulo, consulte a pasta `docs/`:
-- [Visão Geral da Arquitetura](docs/arquitetura/visao_geral.md)
-- [Modelagem de Tempo](docs/ciencia_dados/modelagem_preditiva_tempo.md)
-- [Clustering de Dificuldade](docs/ciencia_dados/clustering_dificuldade.md)
 
 ---

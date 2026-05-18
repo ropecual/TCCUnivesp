@@ -22,10 +22,9 @@ def main():
     caminho_enriquecido = 'dados/resultados/analise_trilhas_enriquecido.csv'
     caminho_classificado = 'dados/resultados/trilhas_classificadas.csv'
 
-    calcular_localizacao = input(
-        "\nDeseja executar o enriquecimento geográfico? (s/n): "
-    ).strip().lower() == 's'
-
+    #calcular_localizacao = input("\nDeseja executar o enriquecimento geográfico? (s/n): ").strip().lower() == 's'
+    
+    calcular_localizacao = False
     # ------------------------------------------------------------
     # 1) Processamento GPX
     # ------------------------------------------------------------
@@ -53,7 +52,7 @@ def main():
             caminho_csv_saida=caminho_enriquecido
         )
         print("Enriquecimento geográfico concluído.")
-        caminho_para_classificacao = caminho_enriquecido
+        caminho_para_classificacao = caminho_analise
     else:
         print("\n[2/3] Enriquecimento ignorado.")
         caminho_para_classificacao = caminho_analise

@@ -145,7 +145,7 @@ def analisar_trilha(caminho_gpx: str) -> dict:
     )
 
     # ------------------------------------------------------------
-    # INTENSIDADE DIÁRIA (ESCALA ORIGINAL COERENTE)
+    # INTENSIDADE DIÁRIA 
     # ------------------------------------------------------------
 
     intensidade_diaria = (
